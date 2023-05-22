@@ -38,7 +38,7 @@ namespace error_handling_demo
                 public void ThenValueIsExpected()
                 {
                     var id = Guid.NewGuid();
-                    var result = Result.Success(id);
+                    Result<Guid> result = id;
 
                     result.Value.Should().Be(id);
                 }
@@ -57,7 +57,7 @@ namespace error_handling_demo
             [Fact]
             public void ThenIsSuccessIsFalse()
             {
-                var result = Result.Failure(Error.InvalidOperation());
+                Result result = Error.InvalidOperation();
 
                 result.IsSuccess.Should().BeFalse();
             }
@@ -65,7 +65,7 @@ namespace error_handling_demo
             [Fact]
             public void ThenIsFailureIsTrue()
             {
-                var result = Result.Failure(Error.ArgumentNull());
+                Result result = Error.ArgumentNull();
 
                 result.IsFailure.Should().BeTrue();
 
@@ -75,7 +75,7 @@ namespace error_handling_demo
             [MemberData(nameof(GetErrors))]
             public void ThenErrorIsExpected(Error error)
             {
-                var result = Result.Failure(error);
+                Result result = error;
 
                 result.Error.Should().Be(error);
 
