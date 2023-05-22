@@ -2,41 +2,46 @@
 {
     public class Result
     {
-        public bool IsSuccess { get; }
+        public bool IsSuccess => Error is null;
         public bool IsFailure => !IsSuccess;
         public Error? Error { get; }
 
-        protected Result()
-        { }
-
-        private Result(bool isSuccess, Error? error = default)
+        protected Result(Error? error = default)
         {
-            IsSuccess = isSuccess;
             Error = error;
         }
 
         public static Result Success()
         {
-            return new Result(true);
+            return new();
         }
 
         public static Result<T> Success<T>(T value)
         {
-            return new Result<T>(value);
+            return new(value);
         }
 
         public static Result Failure(Error error)
         {
-            return new Result(false, error);
+            return new(error);
         }
+
+        public static implicit operator Result(Error error) => new(error);
     }
+
     public class Result<T> : Result
     {
         public T Value { get; }
+
+        public Result(Error error) : base(error)
+        { }
 
         public Result(T value)
         {
             Value = value;
         }
+
+        public static implicit operator Result<T>(T value) => new(value);
+        public static implicit operator Result<T>(Error error) => new(error);
     }
 }
