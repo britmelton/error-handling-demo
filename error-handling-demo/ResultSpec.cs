@@ -7,28 +7,41 @@ namespace error_handling_demo
     {
         public class WhenInstantiatingASuccess
         {
+            private readonly Result _result;
+
+            public WhenInstantiatingASuccess()
+            {
+                _result = Result.Success();
+            }
+
             [Fact]
             public void ThenIsSuccessIsTrue()
             {
-                var result = Result.Success();
-
-                result.IsSuccess.Should().BeTrue();
+                _result.IsSuccess.Should().BeTrue();
             }
 
             [Fact]
             public void ThenIsFailureIsFalse()
             {
-                var result = Result.Success();
-
-                result.IsFailure.Should().BeFalse();
+                _result.IsFailure.Should().BeFalse();
             }
 
             [Fact]
             public void ThenErrorIsNull()
             {
-                var result = Result.Success();
+                _result.Error.Should().BeNull();
+            }
 
-                result.Error.Should().BeNull();
+            public class WithAValue : WhenInstantiatingASuccess
+            {
+                [Fact]
+                public void ThenValueIsExpected()
+                {
+                    var id = Guid.NewGuid();
+                    var result = Result.Success(id);
+
+                    result.Value.Should().Be(id);
+                }
             }
         }
 
